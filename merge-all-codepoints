@@ -1,0 +1,44 @@
+#!/usr/bin/python
+#
+# Take downloaded CSV files and create release with all current ones and any deleted ones
+
+import csv
+import errno
+import glob
+import os
+
+try:
+    os.makedirs('merged')
+except OSError as exc:
+    if exc.errno == errno.EEXIST and os.path.isdir('merged'):
+        pass
+    else: raise
+
+dates = [
+    '2010-02', '2010-05', '2010-08', '2010-11', 
+    '2011-02', '2011-05', '2011-08', '2011-11',
+    '2012-02', '2012-05', '2012-11' # August missing
+]
+
+for file in sorted(glob.glob('%s/*.csv' % dates[-1])):
+    base = os.path.basename(file)
+    print base
+
+    pcs = {}
+    for date in dates:
+        old_file = os.path.join(date, base)
+        with open(old_file) as f:
+            lines = csv.reader(f)
+            for row in lines:
+                pc = row[0]
+                if len(row) != 10:
+                    row = [ row[0], row[1], row[10], row[11], 0, 0, 0, 0, 0, 0 ]
+                row[1] = int(row[1])
+                row[2] = int(row[2])
+                row[3] = int(row[3])
+                pcs[pc] = row
+
+    with open('merged/%s' % base, 'w') as csvfile:
+        w = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+        for row in sorted(pcs.items()):
+            w.writerow(row[1])

@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Download all current Code-Points from mySociety's cache, and unzip them
+
+#set -x
+set -e
+
+# Fetch them all
+DATES="2010-02 2010-05 2010-08 2010-11 2011-02 2011-05 2011-08 2011-11 2012-02 2012-05 2012-11"
+
+for date in $DATES
+do
+    mkdir -p $date
+    FILE="$date/codepoint-$date.zip"
+    if [ ! -e "$FILE" ]; then
+        if [ "$date" == "2010-02" ]; then
+            curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb.zip
+        else
+            curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb-$date.zip
+        fi
+    fi
+done
+
+# Unzip them, canonicalise location of CSV files
+for date in $DATES
+do
+    cd $date
+    # Assume if ab.csv present, we've already done this step
+    if [ -e ab.csv ]; then
+        cd ..
+        continue
+    fi
+    unzip codepoint-$date.zip
+    DIR="Data"
+    for possible_dir in "data/CSV" "Code-Point Open/data/CSV" "Code-Point Open/data" "Code-Point Open/Data"; do
+        if [ -d "$possible_dir" ]; then
+            DIR=$possible_dir
+            break
+        fi
+    done
+    mv "$DIR"/*.csv ./
+    rm -rf doc Doc data Data "Code-Point Open" readme.txt
+    cd ..
+done
+
