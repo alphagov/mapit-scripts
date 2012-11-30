@@ -1,4 +1,4 @@
-Hi,
+For some more information about Mapit and things we should be aware of, please see [the notes on the dev wiki](https://github.com/alphagov/wiki/wiki/Mapit)
 
 Please find some hopefully helpful notes on top of the documentation given at
 http://code.mapit.mysociety.org/
