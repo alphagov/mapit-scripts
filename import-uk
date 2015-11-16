@@ -24,7 +24,7 @@ mkdir -p Boundary-Line
 unzip -d Boundary-Line bdline_gb-2015-10.zip
 
 echo "Importing Boundary-Line"
-sudo -u mapit python $MANAGE mapit_UK_import_boundary_line --control=mapit.controls.first-gss --commit `ls Boundary-Line/Data/*.shp|grep -v high_water`
+sudo -u mapit python $MANAGE mapit_UK_import_boundary_line --control=mapit.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
 echo "Associating boundary shapes with their parents (this is generational and can take up to 10 minutes)"
 sudo -u mapit python $MANAGE mapit_UK_find_parents
 
