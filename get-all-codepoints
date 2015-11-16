@@ -18,11 +18,7 @@ do
     mkdir -p $date
     FILE="$date/codepoint-$date.zip"
     if [ ! -e "$FILE" ]; then
-        if [ "$date" == "2010-02" ]; then
-            curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb.zip
-        else
-            curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb-$date.zip
-        fi
+        curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb-$date.zip
     fi
 done
 
