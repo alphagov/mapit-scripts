@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Running on something with MapIt already installed
 # in /var/www/mapit
 #
