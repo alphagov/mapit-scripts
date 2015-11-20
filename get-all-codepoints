@@ -18,7 +18,7 @@ do
     mkdir -p $date
     FILE="$date/codepoint-$date.zip"
     if [ ! -e "$FILE" ]; then
-        curl -o "$FILE" http://parlvid.mysociety.org:81/os/codepo_gb-$date.zip
+        curl -o "$FILE" http://parlvid.mysociety.org/os/codepo_gb-$date.zip
     fi
 done
 
@@ -33,7 +33,7 @@ do
     fi
     unzip codepoint-$date.zip
     DIR="Data"
-    for possible_dir in "data/CSV" "Code-Point Open/data/CSV" "Code-Point Open/data" "Code-Point Open/Data"; do
+    for possible_dir in "Data/CSV/" "data/CSV" "Code-Point Open/data/CSV" "Code-Point Open/data" "Code-Point Open/Data"; do
         if [ -d "$possible_dir" ]; then
             DIR=$possible_dir
             break
