@@ -17,7 +17,7 @@ Minimal requirements
 * conf/general.yml set up - DB config, COUNTRY: 'GB', AREA_SRID: 27700, SECRET_KEY: ...
 * ./manage.py syncdb --noinput
   ./manage.py migrate mapit
-* Run import-uk
+* Run import-uk-onspd
 
 Scripts
 =======
@@ -37,18 +37,24 @@ more manual instructions.
 import-uk
 ---------
 This script runs instructions similar to http://code.mapit.mysociety.org/import/uk/
-It downloads the May 2012 Boundary-Line from the mySociety cache, and all Code-Points
-up to November 2012, which it merges together (in order to allow deleted
-postcodes to also be imported). It gets ONSPD from the ONS website.
+It downloads the October 2015 Boundary-Line from the mySociety cache, and all Code-Points
+up to May 2015, which it merges together (in order to allow deleted
+postcodes to also be imported). It uses the November 2015 ONSPD from the mySociety cache.
 
 It loads fixtures, runs all the various importing scripts on this downloaded data,
 and activates the generation. It also adds old ONS codes to the matching new GSS codes.
 
 get-all-codepoints / merge-all-codepoints
 -----------------------------------------
-Called by import-uk, these fetch all Code-Points up to November 2012 from the
+Called by import-uk, these fetch all Code-Points up to May 2015 from the
 mySociety cache, and merge them together, respectively.
 
+import-uk-onspd
+---------------
+This script is very similar to `import-uk` with the following exceptions:
+
+1. It does not download Code Point Open at all and uses the ONSPD only imports we've added to [our mapit fork](http://github.com/alphagov/mapit)
+2. It downloads the latest ONSPD (Aug 2015 currently) direct from the ONS
 
 Notes
 -----
