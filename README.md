@@ -60,21 +60,5 @@ Notes
 -----
 
 Please note https://github.com/mysociety/mapit/wiki/NotesOnIDs regarding ID
-usage now and in future. The import matching old ONS codes to their GSS
-equivalents that import-uk does will not match the four councils listed below,
-as their GSS codes have changed since the old ONS codes. If you need to match
-current council GSS IDs to what their ONS codes were in the past, you will
-need to add the ONS codes below to their new GSS codes.
-
-* East Dunbartonshire Council has GSS code S12000045. It used to be S12000009
-  which is equivalent to old code 00QL.
-
-* Glasgow City Council has GSS code S12000046. It used to be S12000043 which is
-  equivalent to old code 00QS.
-
-* St Albans Borough Council has GSS code E07000240. It used to be E07000100
-  which is equivalent to old code 26UG.
-
-* Welwyn Hatfield Borough Council has GSS code E07000241. It used to be
-  E07000104 which is equivalent to old code 26UL.
-
+usage now and in future.  As part of import-uk and import-uk-onspd we matches some old ONS codes to their GSS  equivalents.  However it's likely that new
+releases of the data will increase the number of mismatches and we will need to update these scripts as more boundaries change.
