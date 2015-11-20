@@ -57,8 +57,9 @@ echo "Dealing with Isles of Scilly and special postcodes"
 $MANAGE mapit_UK_scilly merged/tr.csv
 $MANAGE loaddata uk_special_postcodes
 
+echo "Adding some missing GSS and ONS Codes"
+$MANAGE mapit_UK_add_missing_codes
+$MANAGE mapit_UK_add_ons_to_gss
+
 echo "Activate"
 $MANAGE mapit_generation_activate --commit
-
-echo "Oh, and add the old ONS codes as a bonus"
-$MANAGE mapit_UK_add_ons_to_gss
