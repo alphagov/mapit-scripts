@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Running on a gds/puppet managed install of mapit
+#
+# Matthew Somerville <matthew@mysociety.org>
+
+set -e
+
+export MANAGE="govuk_setenv mapit /var/apps/mapit/.venv/bin/python /var/apps/mapit/manage.py"
+
+# Okay, let's start the import. Instructions taken from
+# http://code.mapit.mysociety.org/import/uk/
+
+$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2015-10 and ONSPD 2015-08."
+$MANAGE loaddata uk
+
+# Boundary-Line
+echo "Fetching Boundary-Line from mySociety cache"
+if [ ! -e bdline_gb-2015-10.zip ]; then
+    curl -O http://parlvid.mysociety.org/os/bdline_gb-2015-10.zip
+fi
+mkdir -p Boundary-Line
+unzip -d Boundary-Line bdline_gb-2015-10.zip
+
+echo "Importing Boundary-Line"
+$MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
+echo "Associating boundary shapes with their parents (this is generational and can take up to 10 minutes)"
+$MANAGE mapit_UK_find_parents --commit
+
+echo "Fetching ONSPD from directly from ONS"
+if [ ! -e ONSPD_AUG_2015_csv.zip ]; then
+    curl -O https://geoportal.statistics.gov.uk/Docs/PostCodes/ONSPD_AUG_2015_csv.zip
+fi
+mkdir -p ONSPD
+unzip -d ONSPD ONSPD_AUG_2015_csv.zip
+
+echo "Importing Postcodes from ONSPD"
+$MANAGE mapit_UK_import_onspd --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+
+echo "Dealing with Northern Ireland"
+$MANAGE mapit_UK_import_onspd_ni_areas
+$MANAGE mapit_UK_import_onspd_ni --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+$MANAGE mapit_UK_import_nspd_crown_dependencies --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+
+echo "Dealing with Isles of Scilly and special postcodes"
+$MANAGE mapit_UK_scilly_onspd --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+$MANAGE loaddata uk_special_postcodes
+
+echo "Activate"
+$MANAGE mapit_generation_activate --commit
+
+echo "Oh, and add the old ONS codes as a bonus"
+$MANAGE mapit_UK_add_ons_to_gss
