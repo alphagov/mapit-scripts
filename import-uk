@@ -1,19 +1,18 @@
 #!/bin/bash
 #
-# Running on something with MapIt already installed
-# in /var/www/mapit
+# Running on a gds/puppet managed install of mapit
 #
 # Matthew Somerville <matthew@mysociety.org>
 
 set -e
 
-export MANAGE=/data/vhost/mapit/mapit/project/manage.py
+export MANAGE="govuk_setenv mapit /var/apps/mapit/.venv/bin/python /var/apps/mapit/manage.py"
 
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
 
-sudo -u mapit python $MANAGE mapit_generation_create --commit --desc "Initial import of BL 2015-10 and merged Code-Point up to 2015-05."
-sudo -u mapit python $MANAGE loaddata uk
+$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2015-10 and merged Code-Point up to 2015-05."
+$MANAGE loaddata uk
 
 # Boundary-Line
 echo "Fetching Boundary-Line from mySociety cache"
@@ -24,9 +23,9 @@ mkdir -p Boundary-Line
 unzip -d Boundary-Line bdline_gb-2015-10.zip
 
 echo "Importing Boundary-Line"
-sudo -u mapit python $MANAGE mapit_UK_import_boundary_line --control=mapit.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
+$MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
 echo "Associating boundary shapes with their parents (this is generational and can take up to 10 minutes)"
-sudo -u mapit python $MANAGE mapit_UK_find_parents
+$MANAGE mapit_UK_find_parents --commit
 
 # If you want to just load latest codepoint, then download it and run
 # if [ ! -e codepo_gb-2015-05.zip ]; then
@@ -41,7 +40,7 @@ echo "Fetching Code-Points"
 ./merge-all-codepoints
 
 echo "Importing Code-Points"
-sudo -u mapit python $MANAGE mapit_UK_import_codepoint merged/*.csv
+$MANAGE mapit_UK_import_codepoint merged/*.csv
 
 echo "Dealing with Northern Ireland"
 if [ ! -e ONSPD_NOV_2014_csv.zip ]; then
@@ -50,16 +49,16 @@ fi
 mkdir -p ONSPD
 unzip -d ONSPD ONSPD_NOV_2014_csv.zip
 
-sudo -u mapit python $MANAGE mapit_UK_import_nspd_ni_areas
-sudo -u mapit python $MANAGE mapit_UK_import_nspd_ni ONSPD/Data/ONSPD_NOV_2014_UK.csv
-sudo -u mapit python $MANAGE mapit_UK_import_nspd_crown_dependencies ONSPD/Data/ONSPD_NOV_2014_UK.csv
+$MANAGE mapit_UK_import_nspd_ni_areas
+$MANAGE mapit_UK_import_nspd_ni ONSPD/Data/ONSPD_NOV_2014_UK.csv
+$MANAGE mapit_UK_import_nspd_crown_dependencies ONSPD/Data/ONSPD_NOV_2014_UK.csv
 
 echo "Dealing with Isles of Scilly and special postcodes"
-sudo -u mapit python $MANAGE mapit_UK_scilly merged/tr.csv
-sudo -u mapit python $MANAGE loaddata uk_special_postcodes
+$MANAGE mapit_UK_scilly merged/tr.csv
+$MANAGE loaddata uk_special_postcodes
 
 echo "Activate"
-sudo -u mapit python $MANAGE mapit_generation_activate --commit
+$MANAGE mapit_generation_activate --commit
 
 echo "Oh, and add the old ONS codes as a bonus"
-sudo -u mapit python $MANAGE mapit_UK_add_ons_to_gss
+$MANAGE mapit_UK_add_ons_to_gss
