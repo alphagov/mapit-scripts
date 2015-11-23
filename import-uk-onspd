@@ -34,12 +34,19 @@ fi
 mkdir -p ONSPD
 unzip -d ONSPD ONSPD_AUG_2015_csv.zip
 
-echo "Importing Postcodes from ONSPD"
+echo "Importing GB Postcodes with locations from ONSPD"
 $MANAGE mapit_UK_import_onspd --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+echo "Importing GB Postcodes without locations form ONSPD"
+$MANAGE mapit_UK_import_onspd_no_location --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
 
-echo "Dealing with Northern Ireland"
+echo "Dealing with Northern Ireland council areas"
 $MANAGE mapit_UK_import_onspd_ni_areas
+echo "Importing Northern Ireland Postcodes with locations from ONSPD"
 $MANAGE mapit_UK_import_onspd_ni --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+echo "Importing Northern Ireland Postcodes without locations from ONSPD"
+$MANAGE mapit_UK_import_onspd_ni_no_location --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+
+echo "Importing crown dependencies postcodes (none have locations) from ONSPD"
 $MANAGE mapit_UK_import_nspd_crown_dependencies --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
 
 echo "Dealing with Isles of Scilly and special postcodes"
