@@ -31,26 +31,17 @@ echo "Fetching ONSPD from directly from ONS"
 if [ ! -e ONSPD_AUG_2015_csv.zip ]; then
     curl -O https://geoportal.statistics.gov.uk/Docs/PostCodes/ONSPD_AUG_2015_csv.zip
 fi
-mkdir -p ONSPD
-unzip -d ONSPD ONSPD_AUG_2015_csv.zip
 
-echo "Importing GB Postcodes with locations from ONSPD"
-$MANAGE mapit_UK_import_onspd --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
-echo "Importing GB Postcodes without locations form ONSPD"
-$MANAGE mapit_UK_import_onspd_no_location --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+unzip -d ONSPD ONSPD_AUG_2015_csv.zip
 
 echo "Dealing with Northern Ireland council areas"
 $MANAGE mapit_UK_import_onspd_ni_areas
-echo "Importing Northern Ireland Postcodes with locations from ONSPD"
-$MANAGE mapit_UK_import_onspd_ni --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
-echo "Importing Northern Ireland Postcodes without locations from ONSPD"
-$MANAGE mapit_UK_import_onspd_ni_no_location --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
 
-echo "Importing crown dependencies postcodes (none have locations) from ONSPD"
-$MANAGE mapit_UK_import_nspd_crown_dependencies --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+echo "Importing All GB Postcodes (live, terminated, and those with no location from GB, NI, and Crown Dependencies) from ONSPD"
+$MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/Data/ONSPD_AUG_2015_UK.csv
 
 echo "Dealing with Isles of Scilly and special postcodes"
-$MANAGE mapit_UK_scilly_onspd --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
+$MANAGE mapit_UK_scilly --allow-no-location-postcodes --allow-terminated-postcodes ONSPD/Data/ONSPD_AUG_2015_UK.csv
 $MANAGE loaddata uk_special_postcodes
 
 echo "Adding some missing GSS and ONS Codes"
