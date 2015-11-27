@@ -6,7 +6,9 @@
 
 set -e
 
-export MANAGE="govuk_setenv mapit /var/apps/mapit/.venv/bin/python /var/apps/mapit/manage.py"
+source ./find-mapit-venv
+
+export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var/apps/mapit/manage.py"
 
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/

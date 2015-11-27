@@ -1,0 +1,13 @@
+if [ ! $MAPIT_VENV_DIR ]; then
+  if [ -d "/var/apps/mapit/venv" ]; then
+    export MAPIT_VENV_DIR="/var/apps/mapit/venv"
+  elif [ -d "/var/apps/mapit/.venv" ]; then
+    export MAPIT_VENV_DIR="/var/apps/mapit/.venv"
+  else
+    echo "Can't find virtualenv for mapit in /var/apps/venv or /var/apps/.venv.  Install virtualenv to those locations, or specify via MAPIT_VENV_DIR environment variable"
+    exit 1
+  fi
+elif [ ! -d "$MAPIT_VENV_DIR" ]; then
+  echo "Can't find virtualenv for mapit as specified in MAPIT_VENV_DIR='$MAPIT_VENV_DIR'."
+  exit 1
+fi
