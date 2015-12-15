@@ -1,0 +1,39 @@
+#!/bin/bash
+echo "Checking for OSNI downloads before proceeding"
+if [ ! -d OSNI ]; then
+  echo "No OSNI folder present for Northern Ireland boundary data, aborting."
+  exit 1
+fi
+declare -A osni_types
+export osni_types=( \
+  ["wmc"]='_Parliamentary_Constituencies_2008' \
+  ["lgd"]='_Local_Government_Districts_2012' \
+  ["lge"]='_District_Electoral_Areas_2012' \
+  ["lgw"]='Wards_2012' \
+  ["eur"]='_NI_Outline' \
+)
+export osni_folder="OSNI"
+export osni_prefix="OSNI_Open_Data_Largescale_Boundaries_"
+osni_present=0
+for osni_type in "${!osni_types[@]}"
+do
+  suffix=${osni_types["$osni_type"]}
+  if [ ! -e "$osni_folder/$osni_prefix$suffix.zip" ]; then
+    echo -e "$osni_type - \e[31m✗\e[0m (expected zipfile to exist: $osni_folder/$osni_prefix$suffix.zip)"
+    osni_present=1
+  else
+    unzip -d "$osni_folder/$osni_prefix$suffix" -o "$osni_folder/$osni_prefix$suffix.zip"
+    if [ ! -e "$osni_folder/$osni_prefix$suffix/$osni_prefix$suffix.shp" ]; then
+      echo -e "$osni_type - \e[31m✗\e[0m (expected shapefile to exist: $osni_folder/$osni_prefix$suffix/$osni_prefix$suffix.shp)"
+      osni_present=1
+    else
+      echo -e "$osni_type - \e[32m✓\e[m"
+    fi
+  fi
+done
+if [ $osni_present -eq 1 ]; then
+  echo "OSNI Data missing - aborting"
+  exit 1
+else
+  echo "All OSNI Data present - proceeding."
+fi

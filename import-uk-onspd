@@ -10,10 +10,12 @@ source ./find-mapit-venv
 
 export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var/apps/mapit/manage.py"
 
+source ./check-osni-downloads
+
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
 
-$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2015-10 and ONSPD 2015-08."
+$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2015-10, ONSPD 2015-08, and OSNI 2015-11"
 $MANAGE loaddata uk
 
 # Boundary-Line
@@ -26,6 +28,17 @@ unzip -d Boundary-Line bdline_gb-2015-10.zip
 
 echo "Importing Boundary-Line"
 $MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
+
+echo "Importing OSNI"
+osni_import_arguments=""
+for osni_type in "${!osni_types[@]}"
+do
+  suffix=${osni_types["$osni_type"]}
+  file="$osni_folder/$osni_prefix$suffix/$osni_prefix$suffix.shp"
+  osni_import_arguments="$osni_import_arguments --$osni_type=$file"
+done
+$MANAGE mapit_UK_import_osni --control=mapit_gb.controls.first-gss $osni_import_arguments --commit
+
 echo "Associating boundary shapes with their parents (this is generational and can take up to 10 minutes)"
 $MANAGE mapit_UK_find_parents --commit
 
@@ -33,11 +46,7 @@ echo "Fetching ONSPD from directly from ONS"
 if [ ! -e ONSPD_AUG_2015_csv.zip ]; then
     curl -O https://geoportal.statistics.gov.uk/Docs/PostCodes/ONSPD_AUG_2015_csv.zip
 fi
-
 unzip -d ONSPD ONSPD_AUG_2015_csv.zip
-
-echo "Dealing with Northern Ireland council areas"
-$MANAGE mapit_UK_import_onspd_ni_areas
 
 echo "Importing All GB Postcodes (live, terminated, and those with no location from GB, NI, and Crown Dependencies) from ONSPD"
 $MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/Data/ONSPD_AUG_2015_UK.csv
