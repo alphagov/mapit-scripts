@@ -24,7 +24,7 @@ if [ ! -e bdline_gb-2015-10.zip ]; then
     curl -O http://parlvid.mysociety.org/os/bdline_gb-2015-10.zip
 fi
 mkdir -p Boundary-Line
-unzip -d Boundary-Line bdline_gb-2015-10.zip
+unzip -d Boundary-Line -o bdline_gb-2015-10.zip
 
 echo "Importing Boundary-Line"
 $MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
@@ -46,7 +46,7 @@ echo "Fetching ONSPD from directly from ONS"
 if [ ! -e ONSPD_AUG_2015_csv.zip ]; then
     curl -O https://geoportal.statistics.gov.uk/Docs/PostCodes/ONSPD_AUG_2015_csv.zip
 fi
-unzip -d ONSPD ONSPD_AUG_2015_csv.zip
+unzip -d ONSPD -o ONSPD_AUG_2015_csv.zip
 
 echo "Importing All GB Postcodes (live, terminated, and those with no location from GB, NI, and Crown Dependencies) from ONSPD"
 $MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/Data/ONSPD_AUG_2015_UK.csv
