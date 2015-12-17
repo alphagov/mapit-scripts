@@ -10,8 +10,6 @@ source ./find-mapit-venv
 
 export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var/apps/mapit/manage.py"
 
-source ./check-osni-downloads
-
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
 
@@ -30,12 +28,17 @@ echo "Importing Boundary-Line"
 $MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
 
 echo "Importing OSNI"
+source ./check-osni-downloads
 osni_import_arguments=""
 for osni_type in "${!osni_types[@]}"
 do
   suffix=${osni_types["$osni_type"]}
   file="$osni_folder/$osni_prefix$suffix/$osni_prefix$suffix.shp"
+  srid=`cat $osni_folder/metadata.json | ruby -e "require 'json'; begin; puts JSON.parse(STDIN.read).fetch('$osni_prefix$suffix',{}).fetch('srid'); rescue; end"`
   osni_import_arguments="$osni_import_arguments --$osni_type=$file"
+  if [[ $srid ]]; then
+    osni_import_arguments="$osni_import_arguments --$osni_type-srid=$srid"
+  fi
 done
 $MANAGE mapit_UK_import_osni --control=mapit_gb.controls.first-gss $osni_import_arguments --commit
 
