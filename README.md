@@ -17,7 +17,7 @@ Minimal requirements
 * conf/general.yml set up - DB config, COUNTRY: 'GB', AREA_SRID: 27700, SECRET_KEY: ...
 * ./manage.py syncdb --noinput
   ./manage.py migrate mapit
-* Run import-uk
+* Run import-uk-onspd
 
 Scripts
 =======
@@ -37,38 +37,28 @@ more manual instructions.
 import-uk
 ---------
 This script runs instructions similar to http://code.mapit.mysociety.org/import/uk/
-It downloads the May 2012 Boundary-Line from the mySociety cache, and all Code-Points
-up to November 2012, which it merges together (in order to allow deleted
-postcodes to also be imported). It gets ONSPD from the ONS website.
+It downloads the October 2015 Boundary-Line from the mySociety cache, and all Code-Points
+up to May 2015, which it merges together (in order to allow deleted
+postcodes to also be imported). It uses the November 2015 ONSPD from the mySociety cache.
 
 It loads fixtures, runs all the various importing scripts on this downloaded data,
 and activates the generation. It also adds old ONS codes to the matching new GSS codes.
 
 get-all-codepoints / merge-all-codepoints
 -----------------------------------------
-Called by import-uk, these fetch all Code-Points up to November 2012 from the
+Called by import-uk, these fetch all Code-Points up to May 2015 from the
 mySociety cache, and merge them together, respectively.
 
+import-uk-onspd
+---------------
+This script is very similar to `import-uk` with the following exceptions:
+
+1. It does not download Code Point Open at all and uses the ONSPD only imports we've added to [our mapit fork](http://github.com/alphagov/mapit)
+2. It downloads the latest ONSPD (Aug 2015 currently) direct from the ONS
 
 Notes
 -----
 
 Please note https://github.com/mysociety/mapit/wiki/NotesOnIDs regarding ID
-usage now and in future. The import matching old ONS codes to their GSS
-equivalents that import-uk does will not match the four councils listed below,
-as their GSS codes have changed since the old ONS codes. If you need to match
-current council GSS IDs to what their ONS codes were in the past, you will
-need to add the ONS codes below to their new GSS codes.
-
-* East Dunbartonshire Council has GSS code S12000045. It used to be S12000009
-  which is equivalent to old code 00QL.
-
-* Glasgow City Council has GSS code S12000046. It used to be S12000043 which is
-  equivalent to old code 00QS.
-
-* St Albans Borough Council has GSS code E07000240. It used to be E07000100
-  which is equivalent to old code 26UG.
-
-* Welwyn Hatfield Borough Council has GSS code E07000241. It used to be
-  E07000104 which is equivalent to old code 26UL.
-
+usage now and in future.  As part of import-uk and import-uk-onspd we matches some old ONS codes to their GSS  equivalents.  However it's likely that new
+releases of the data will increase the number of mismatches and we will need to update these scripts as more boundaries change.
