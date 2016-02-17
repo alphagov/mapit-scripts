@@ -1,0 +1,11 @@
+# Gitignore to exclude working files
+
+# Downloads from mysociety and ONSPD
+*.gz
+*.zip
+
+# Folders where content is unzipped
+Boundary-Line
+ONSPD
+OSNI
+
