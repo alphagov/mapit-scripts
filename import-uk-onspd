@@ -45,6 +45,9 @@ $MANAGE mapit_UK_import_osni --control=mapit_gb.controls.first-gss $osni_import_
 echo "Associating boundary shapes with their parents (this is generational and can take up to 10 minutes)"
 $MANAGE mapit_UK_find_parents --commit
 
+echo "Adding names from legislation to OSNI imported areas"
+$MANAGE mapit_UK_add_names_to_ni_areas
+
 echo "Fetching ONSPD from directly from ONS"
 if [ ! -e ONSPD_AUG_2015_csv.zip ]; then
     curl -O https://geoportal.statistics.gov.uk/Docs/PostCodes/ONSPD_AUG_2015_csv.zip
