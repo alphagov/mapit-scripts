@@ -1,12 +1,17 @@
-For some more information about Mapit and things we should be aware of, please see [the notes on the dev wiki](https://github.com/alphagov/wiki/wiki/Mapit)
+For some more information about Mapit and things we should be aware of, please see
+ * [the notes in the Opsmanual](https://github.gds/pages/gds/opsmanual/2nd-line/applications/mapit.html)
+ * [the MapIt repo](https://github.com/alphagov/mapit)
+ * [the MapIt wiki page](https://gov-uk.atlassian.net/wiki/display/TECH/MapIt).
 
-Please find some hopefully helpful notes on top of the [Mapit documentation](http://code.mapit.mysociety.org/).
+You should also refer to the official [Mapit documentation](http://mapit.poplus.org/).
+
+**Note that we currently use data imported using the `import-uk-onspd` script.**
 
 Minimal requirements
 ====================
 
-* Repo, from github
-* Packages needed are in conf/packages.ubuntu-precise (+ unzip if you want to
+* Repo, from GitHub
+* Packages needed are in conf/packages.ubuntu-trusty (+ unzip if you want to
   unzip data for import)
 * PostGIS database
   - we run https://docs.djangoproject.com/en/dev/_downloads/create_template_postgis-debian.sh
@@ -22,8 +27,30 @@ Minimal requirements
 Scripts
 =======
 
+import-uk-onspd
+---------------
+_This script needs to be updated to point to new datasets as they are released._
+
+This script runs instructions similar to http://code.mapit.mysociety.org/import/uk/
+
+It downloads Boundary-Line and ONSPD data, and OSNI (Northern Ireland) boundaries from the [mySociety cache](http://parlvid.mysociety.org/os/)
+
+It loads fixtures, runs all the various importing scripts on this downloaded data,
+and activates the generation. It also adds old ONS codes to the matching new GSS codes.
+
+It does not use Code-Point data (unlike `import-uk`)
+
+find-mapit-venv
+---------------
+The virtual env directory is likely to be either `.venv` (on the Dev VM) or
+`venv` on a deployed machine.  This script will find either, and allows for it
+ to be arbitrarily set via the `MAPIT_VENV_DIR` environment variable.
+
 setup-and-import-uk
 -------------------
+_This script is not currently used for our production data set - please see
+[import-uk-onspd](#import-uk-onspd)_
+
 This script runs the mySociety install-site script to set up mapit (this does
 things like install nginx, postgres, and so on, probably only useful if you're
 e.g. running on an empty EC2 instance), changes the necessary bits of
@@ -36,8 +63,12 @@ more manual instructions.
 
 import-uk
 ---------
+_This script is not currently used for our production data set - please see
+[import-uk-onspd](#import-uk-onspd)_
+
 This script runs instructions similar to http://code.mapit.mysociety.org/import/uk/
-It downloads the October 2015 Boundary-Line from the mySociety cache, and all Code-Points
+
+It downloads the Boundary-Line from the [mySociety cache](http://parlvid.mysociety.org/os/), and all Code-Points
 up to May 2015, which it merges together (in order to allow deleted
 postcodes to also be imported). It uses the November 2015 ONSPD from the mySociety cache.
 
@@ -48,13 +79,6 @@ get-all-codepoints / merge-all-codepoints
 -----------------------------------------
 Called by import-uk, these fetch all Code-Points up to May 2015 from the
 mySociety cache, and merge them together, respectively.
-
-import-uk-onspd
----------------
-This script is very similar to `import-uk` with the following exceptions:
-
-1. It does not download Code Point Open at all and uses the ONSPD only imports we've added to [our mapit fork](http://github.com/alphagov/mapit)
-2. It downloads the latest ONSPD (Aug 2015 currently) direct from the ONS
 
 Notes
 -----
