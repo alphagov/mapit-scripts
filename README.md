@@ -38,6 +38,8 @@ It downloads Boundary-Line and ONSPD data, and OSNI (Northern Ireland) boundarie
 It loads fixtures, runs all the various importing scripts on this downloaded data,
 and activates the generation. It also adds old ONS codes to the matching new GSS codes.
 
+It downloads local authority slugs from the GOV.UK Frontend app and assigns them as Codes of type `govuk_slug` to the relevant Areas.
+
 It does not use Code-Point data (unlike `import-uk`)
 
 find-mapit-venv
