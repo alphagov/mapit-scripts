@@ -67,7 +67,9 @@ $MANAGE mapit_UK_add_ons_to_gss
 
 echo "Assigning govuk slugs to councils"
 $MANAGE mapit_UK_add_slugs_to_local_authorities
-$MANAGE mapit_UK_show_missing_codes --code_types=govuk_slug --area_types=CTY,DIS,LBO,LGD,MTD,UTA,COI
 
 echo "Activate"
 $MANAGE mapit_generation_activate --commit
+
+echo "Show missing codes"
+$MANAGE mapit_UK_show_missing_codes
