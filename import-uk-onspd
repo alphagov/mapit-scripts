@@ -65,8 +65,9 @@ echo "Adding some missing GSS and ONS Codes"
 $MANAGE mapit_UK_add_missing_codes
 $MANAGE mapit_UK_add_ons_to_gss
 
-echo "Assigning govuk slugs to councils"
+echo "Assigning govuk slugs and names to councils"
 $MANAGE mapit_UK_add_slugs_to_local_authorities
+$MANAGE mapit_UK_add_override_names_to_local_authorities
 
 echo "Activate"
 $MANAGE mapit_generation_activate --commit
