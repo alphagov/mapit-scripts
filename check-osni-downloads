@@ -12,11 +12,11 @@ export osni_prefix="OSNI_Open_Data_Largescale_Boundaries_"
 osni_present=0
 
 echo "Downloading OSNI from mysociety cache"
-if [ ! -e osni-dec-2015.tar.gz ]; then
-    curl -O http://parlvid.mysociety.org/os/osni-dec-2015.tar.gz
+if [ ! -e 20160902-osni-dec-2015.tar.gz ]; then
+    curl -O https://s3.amazonaws.com/gds-public-readable-tarballs/govuk-mapit/20160902-osni-dec-2015.tar.gz
 fi
 mkdir -p $osni_folder
-tar xvzf osni-dec-2015.tar.gz --transform "s-^[^/]+(/|$)-$osni_folder/-x" --show-transformed-names
+tar xvzf 20160902-osni-dec-2015.tar.gz --transform "s-^[^/]+(/|$)-$osni_folder/-x" --show-transformed-names
 
 for osni_type in "${!osni_types[@]}"
 do
