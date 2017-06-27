@@ -13,16 +13,16 @@ export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
 
-$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2016-10b, ONSPD 2016-11, and OSNI 2015-12"
+$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2017-05, ONSPD MAY_2017, and OSNI 2015-12"
 $MANAGE loaddata uk
 
 # Boundary-Line
 echo "Fetching Boundary-Line from our S3 bucket"
-if [ ! -e bdline_gb-2016-10b.zip ]; then
-    curl -O https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2016-12/bdline_gb-2016-10b.zip
+if [ ! -e bdline_gb-2017-05.zip ]; then
+    curl -O https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2017-06/bdline_gb-2017-05.zip
 fi
 mkdir -p Boundary-Line
-unzip -d Boundary-Line -o bdline_gb-2016-10b.zip
+unzip -d Boundary-Line -o bdline_gb-2017-05.zip
 
 echo "Importing Boundary-Line"
 $MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
@@ -49,16 +49,16 @@ echo "Adding names from legislation to OSNI imported areas"
 $MANAGE mapit_UK_add_names_to_ni_areas
 
 echo "Fetching ONSPD from our S3 bucket"
-if [ ! -e ONSPD_NOV_2016_csv.zip ]; then
-    curl -O https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2016-12/ONSPD_NOV_2016_csv.zip
+if [ ! -e ONSPD_MAY_2017.zip ]; then
+    curl -O https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2017-06/ONSPD_MAY_2017.zip
 fi
-unzip -d ONSPD -o ONSPD_NOV_2016_csv.zip
+unzip -d ONSPD -o ONSPD_MAY_2017.zip
 
 echo "Importing All GB Postcodes (live, terminated, and those with no location from GB, NI, and Crown Dependencies) from ONSPD"
-$MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/ONSnov2016/Data/ONSPD_NOV_2016_UK.csv
+$MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/Data/ONSPD_MAY_2017_UK.csv
 
 echo "Dealing with Isles of Scilly and special postcodes"
-$MANAGE mapit_UK_scilly --allow-no-location-postcodes --allow-terminated-postcodes ONSPD/ONSnov2016/Data/ONSPD_NOV_2016_UK.csv
+$MANAGE mapit_UK_scilly --allow-no-location-postcodes --allow-terminated-postcodes ONSPD/Data/ONSPD_MAY_2017_UK.csv
 $MANAGE loaddata uk_special_postcodes
 
 echo "Adding some missing GSS and ONS Codes"
