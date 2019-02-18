@@ -1,4 +1,8 @@
 #!/bin/bash
+
+set -eu
+set -o pipefail
+
 declare -A osni_types
 export osni_types=( \
   ["wmc"]='_Parliamentary_Constituencies_2008' \
@@ -11,12 +15,16 @@ export osni_folder="OSNI"
 export osni_prefix="OSNI_Open_Data_Largescale_Boundaries_"
 osni_present=0
 
-echo "Downloading OSNI from mysociety cache"
-if [ ! -e 20160902-osni-dec-2015.tar.gz ]; then
-    curl -O https://s3.amazonaws.com/gds-public-readable-tarballs/govuk-mapit/20160902-osni-dec-2015.tar.gz
+OSNI_URL=http://parlvid.mysociety.org/os/osni-dec-2015.tar.gz
+
+OSNI_FILE_NAME=$(basename $OSNI_URL)
+echo "Fetching OSNI data"
+if [ ! -e $OSNI_FILE_NAME ]; then
+    curl -O $OSNI_URL
 fi
+
 mkdir -p $osni_folder
-tar xvzf 20160902-osni-dec-2015.tar.gz --transform "s-^[^/]+(/|$)-$osni_folder/-x" --show-transformed-names
+tar xvzf $OSNI_FILE_NAME --transform "s-^[^/]+(/|$)-$osni_folder/-x" --show-transformed-names
 
 for osni_type in "${!osni_types[@]}"
 do
