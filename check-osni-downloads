@@ -15,10 +15,10 @@ export osni_folder="OSNI"
 export osni_prefix="OSNI_Open_Data_Largescale_Boundaries_"
 osni_present=0
 
-OSNI_URL=https://s3.amazonaws.com/gds-public-readable-tarballs/govuk-mapit/20160902-osni-dec-2015.tar.gz
+OSNI_URL=http://parlvid.mysociety.org/os/osni-dec-2015.tar.gz
 
 OSNI_FILE_NAME=$(basename $OSNI_URL)
-echo "Fetching OSNI from our S3 bucket"
+echo "Fetching OSNI data"
 if [ ! -e $OSNI_FILE_NAME ]; then
     curl -O $OSNI_URL
 fi
