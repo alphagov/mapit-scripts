@@ -66,7 +66,7 @@ echo "Importing All GB Postcodes (live, terminated, and those with no location f
 $MANAGE mapit_UK_import_onspd --allow-terminated-postcodes --allow-no-location-postcodes --crown-dependencies=include --northern-ireland=include ONSPD/Data/$ONSPD_FILE_PREFIX.csv
 
 echo "Dealing with Isles of Scilly and special postcodes"
-$MANAGE mapit_UK_scilly --allow-no-location-postcodes --allow-terminated-postcodes ONSPD/Data/$ONSPD_FILE_PREFIX.csv
+$MANAGE mapit_UK_scilly --commit
 $MANAGE loaddata uk_special_postcodes
 
 echo "Adding some missing GSS and ONS Codes"
