@@ -42,12 +42,6 @@ It downloads local authority slugs from the GOV.UK Frontend app and assigns them
 
 It does not use Code-Point data (unlike `import-uk`)
 
-find-mapit-venv
----------------
-The virtual env directory is likely to be either `.venv` (on the Dev VM) or
-`venv` on a deployed machine.  This script will find either, and allows for it
- to be arbitrarily set via the `MAPIT_VENV_DIR` environment variable.
-
 setup-and-import-uk
 -------------------
 _This script is not currently used for our production data set - please see
