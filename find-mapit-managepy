@@ -1,0 +1,8 @@
+if [ -f /.dockerenv ]; then
+  # Docker environment
+   export MANAGE="/govuk/mapit/manage.py"
+else
+  # Non-Docker environment
+  source ./find-mapit-venv
+  export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var/apps/mapit/manage.py"
+fi
