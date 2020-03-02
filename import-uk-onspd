@@ -6,9 +6,7 @@
 
 set -e
 
-source ./find-mapit-venv
-
-export MANAGE="/usr/local/bin/govuk_setenv mapit $MAPIT_VENV_DIR/bin/python /var/apps/mapit/manage.py"
+source ./find-mapit-managepy
 
 BD_LINE_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2019-08/bdline_gb-2019-05.zip
 ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2019-08/ONSPD_AUG_2019_UK.zip
