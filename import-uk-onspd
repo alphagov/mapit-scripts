@@ -6,10 +6,10 @@
 
 set -e
 
-source ./find-mapit-managepy
+source ../mapit-scripts/find-mapit-managepy
 
 BD_LINE_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2019-08/bdline_gb-2019-05.zip
-ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2019-08/ONSPD_AUG_2019_UK.zip
+ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2020-02/ONSPD_FEB_2020_UK.zip
 
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
@@ -30,7 +30,7 @@ echo "Importing Boundary-Line"
 $MANAGE mapit_UK_import_boundary_line --control=mapit_gb.controls.first-gss --commit `ls Boundary-Line/Data/**/*.shp|grep -Ev high_water\|parish_region\|Supplementary_\[Historical\|Ceremonial\]\|Wales/community_ward_region`
 
 echo "Importing OSNI"
-source ./check-osni-downloads
+source ../mapit-scripts/check-osni-downloads
 osni_import_arguments=""
 for osni_type in "${!osni_types[@]}"
 do
