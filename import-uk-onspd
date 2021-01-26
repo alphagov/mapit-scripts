@@ -8,13 +8,13 @@ set -e
 
 source ../mapit-scripts/find-mapit-managepy
 
-BD_LINE_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2019-08/bdline_gb-2019-05.zip
-ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2020-02/ONSPD_FEB_2020_UK.zip
+BD_LINE_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2020-11/bdline_gb-2020-10.zip
+ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2020-11/ONSPD_NOV_2020_UK.zip
 
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
 
-$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2019-05, ONSPD AUG_2019, and OSNI 2015-12"
+$MANAGE mapit_generation_create --commit --desc "Initial import of BL 2020-10, ONSPD NOV_2020, and OSNI 2015-12"
 $MANAGE loaddata uk
 
 # Boundary-Line

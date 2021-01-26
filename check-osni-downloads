@@ -15,7 +15,7 @@ export osni_folder="OSNI"
 export osni_prefix="OSNI_Open_Data_Largescale_Boundaries_"
 osni_present=0
 
-OSNI_URL=http://parlvid.mysociety.org/os/osni-dec-2015.tar.gz
+OSNI_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2020-10/osni-dec-2015.tar.gz
 
 OSNI_FILE_NAME=$(basename $OSNI_URL)
 echo "Fetching OSNI data"
