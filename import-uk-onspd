@@ -8,8 +8,8 @@ set -e
 
 source ../mapit-scripts/find-mapit-managepy
 
-BD_LINE_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2021-05/bdline_essh_gb.zip
-ONSPD_URL=https://s3-eu-west-1.amazonaws.com/govuk-custom-formats-mapit-storage-production/source-data/2021-05/ONSPD_MAY_2021_UK.zip
+BD_LINE_FILE_PATH=/govuk/mapit/bdline_essh_gb.zip
+ONSPD_FILE_PATH=/govuk/mapit/ONSPD_MAY_2021_UK.zip
 
 # Okay, let's start the import. Instructions taken from
 # http://code.mapit.mysociety.org/import/uk/
@@ -18,12 +18,8 @@ $MANAGE mapit_generation_create --commit --desc "Initial import of BL 2021-05, O
 $MANAGE loaddata uk
 
 # Boundary-Line
-BD_LINE_FILE_NAME=$(basename $BD_LINE_URL)
-echo "Fetching Boundary-Line from our S3 bucket"
-if [ ! -e $BD_LINE_FILE_NAME ]; then
-    curl -O $BD_LINE_URL
-fi
-mkdir -p Boundary-Line
+echo "Unzipping Boundary-Line"
+BD_LINE_FILE_NAME=$(basename $BD_LINE_FILE_PATH)
 unzip -d Boundary-Line -o $BD_LINE_FILE_NAME
 
 echo "Importing Boundary-Line"
@@ -51,13 +47,10 @@ echo "Adding names from legislation to OSNI imported areas"
 $MANAGE mapit_UK_add_names_to_ni_areas
 
 #ONSPD
-ONSPD_FILE_NAME=$(basename $ONSPD_URL)
+ONSPD_FILE_NAME=$(basename $ONSPD_FILE_PATH)
 ONSPD_FILE_PREFIX=${ONSPD_FILE_NAME%.*}
 
-echo "Fetching ONSPD from our S3 bucket"
-if [ ! -e $ONSPD_FILE_NAME ]; then
-    curl -O $ONSPD_URL
-fi
+echo "Unzipping ONSPD"
 unzip -d ONSPD -o $ONSPD_FILE_NAME
 
 echo "Importing All GB Postcodes (live, terminated, and those with no location from GB, NI, and Crown Dependencies) from ONSPD"
