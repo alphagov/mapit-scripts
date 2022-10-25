@@ -1,3 +1,7 @@
+# MapIt-Scripts
+
+## As of October 2022, Mapit is no longer used for location services within GDS, so these scripts are no longer needed - You should now use [Locations API](https://github.com/alphagov/locations-api) and/or [Local Links Manager](https://github.com/alphagov/local-links-manager) to provide the functionality that Mapit once provided.
+
 For some more information about Mapit and things we should be aware of, please see
  * [the notes in the Opsmanual](https://github.gds/pages/gds/opsmanual/2nd-line/applications/mapit.html)
  * [the MapIt repo](https://github.com/alphagov/mapit)
